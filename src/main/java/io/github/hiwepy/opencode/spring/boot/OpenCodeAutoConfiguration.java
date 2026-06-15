@@ -1,9 +1,10 @@
 package io.github.hiwepy.opencode.spring.boot;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.hiwepy.opencode.OpenCodeClient;
 import io.github.hiwepy.opencode.OpenCodeClientConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import okhttp3.OkHttpClient;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -20,31 +21,12 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(OpenCodeProperties.class)
 public class OpenCodeAutoConfiguration {
 
-    private static final Logger log = LoggerFactory.getLogger(OpenCodeAutoConfiguration.class);
-
-    @Bean
-    @ConditionalOnMissingBean
-    public OpenCodeClientConfig openCodeClientConfig(OpenCodeProperties properties) {
-        OpenCodeClientConfig config = new OpenCodeClientConfig();
-        config.setServerUrl(properties.getServerUrl());
-        config.setUsername(properties.getUsername());
-        config.setPassword(properties.getPassword());
-        config.setConnectTimeoutMillis(properties.getConnectTimeoutMillis());
-        config.setReadTimeoutMillis(properties.getReadTimeoutMillis());
-        config.setVerifySsl(properties.isVerifySsl());
-        config.setLocalExecutable(properties.getCliExecutable());
-        config.setLocalTimeoutSeconds(properties.getCliTimeoutSeconds());
-        config.setLocalProbeTimeoutSeconds(5);
-        config.setDefaultModel(properties.getDefaultModel());
-        config.setDefaultAgent(properties.getDefaultAgent());
-        log.info("OpenCode client configured: serverUrl={}, username={}", config.getServerUrl(), config.getUsername());
-        return config;
-    }
-
     @Bean(destroyMethod = "close")
     @ConditionalOnMissingBean
-    public OpenCodeClient openCodeClient(OpenCodeClientConfig config) {
-        return new OpenCodeClient(config);
+    public OpenCodeClient openCodeClient(OpenCodeClientConfig config,
+                                         ObjectProvider<ObjectMapper> objectMapperProvider,
+                                         ObjectProvider<OkHttpClient> httpClientProvider) {
+        return new OpenCodeClient(config, objectMapperProvider.getIfAvailable(), httpClientProvider.getIfAvailable());
     }
 
     @Bean
