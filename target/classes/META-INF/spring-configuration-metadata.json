@@ -4,86 +4,106 @@
       "name": "opencode",
       "type": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties",
       "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties"
+    },
+    {
+      "name": "opencode.cli",
+      "type": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties$OpenCodeCli",
+      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties",
+      "sourceMethod": "getCli()"
+    },
+    {
+      "name": "opencode.http",
+      "type": "io.github.hiwepy.opencode.OpenCodeHttpClientConfig",
+      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties",
+      "sourceMethod": "getHttp()"
     }
   ],
   "properties": [
     {
-      "name": "opencode.connect-timeout-millis",
+      "name": "opencode.cli.executable",
+      "type": "java.lang.String",
+      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties$OpenCodeCli"
+    },
+    {
+      "name": "opencode.cli.fail-fast-on-unavailable",
+      "type": "java.lang.Boolean",
+      "description": "启动探测失败时是否中断应用启动",
+      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties$OpenCodeCli",
+      "defaultValue": false
+    },
+    {
+      "name": "opencode.cli.max-concurrent-executions",
       "type": "java.lang.Integer",
-      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties"
+      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties$OpenCodeCli"
     },
     {
-      "name": "opencode.default-agent",
-      "type": "java.lang.String",
-      "description": "默认 agent 名称。",
-      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties"
+      "name": "opencode.cli.probe-timeout-seconds",
+      "type": "java.lang.Integer",
+      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties$OpenCodeCli"
     },
     {
-      "name": "opencode.default-model",
+      "name": "opencode.cli.startup-check-enabled",
+      "type": "java.lang.Boolean",
+      "description": "是否在应用启动时执行本机 {@code opencode --version} 探测",
+      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties$OpenCodeCli",
+      "defaultValue": true
+    },
+    {
+      "name": "opencode.cli.timeout",
+      "type": "java.lang.Integer",
+      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties$OpenCodeCli"
+    },
+    {
+      "name": "opencode.cli.working-directory",
       "type": "java.lang.String",
-      "description": "默认模型，格式 {@code provider\/model}。",
-      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties"
+      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties$OpenCodeCli"
     },
     {
       "name": "opencode.enabled",
       "type": "java.lang.Boolean",
-      "description": "启用\/禁用 OpenCode starter。",
+      "description": "是否启用本 Starter 提供的 Bean",
       "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties",
       "defaultValue": true
     },
     {
-      "name": "opencode.fail-fast-on-unavailable",
-      "type": "java.lang.Boolean",
-      "description": "CLI 不可用时是否快速失败（启动失败）。",
-      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties",
-      "defaultValue": false
-    },
-    {
-      "name": "opencode.local-executable",
-      "type": "java.lang.String",
-      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties"
-    },
-    {
-      "name": "opencode.local-probe-timeout-seconds",
+      "name": "opencode.http.connect-timeout-millis",
       "type": "java.lang.Integer",
-      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties"
+      "sourceType": "io.github.hiwepy.opencode.OpenCodeHttpClientConfig"
     },
     {
-      "name": "opencode.local-timeout-seconds",
+      "name": "opencode.http.default-agent",
+      "type": "java.lang.String",
+      "sourceType": "io.github.hiwepy.opencode.OpenCodeHttpClientConfig"
+    },
+    {
+      "name": "opencode.http.default-model",
+      "type": "java.lang.String",
+      "sourceType": "io.github.hiwepy.opencode.OpenCodeHttpClientConfig"
+    },
+    {
+      "name": "opencode.http.password",
+      "type": "java.lang.String",
+      "sourceType": "io.github.hiwepy.opencode.OpenCodeHttpClientConfig"
+    },
+    {
+      "name": "opencode.http.read-timeout-millis",
       "type": "java.lang.Integer",
-      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties"
+      "sourceType": "io.github.hiwepy.opencode.OpenCodeHttpClientConfig"
     },
     {
-      "name": "opencode.password",
+      "name": "opencode.http.server-url",
       "type": "java.lang.String",
-      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties"
+      "sourceType": "io.github.hiwepy.opencode.OpenCodeHttpClientConfig"
     },
     {
-      "name": "opencode.read-timeout-millis",
-      "type": "java.lang.Integer",
-      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties"
-    },
-    {
-      "name": "opencode.server-url",
+      "name": "opencode.http.username",
       "type": "java.lang.String",
-      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties"
+      "sourceType": "io.github.hiwepy.opencode.OpenCodeHttpClientConfig"
     },
     {
-      "name": "opencode.startup-check-enabled",
+      "name": "opencode.http.verify-ssl",
       "type": "java.lang.Boolean",
-      "description": "启动时是否探测 CLI 可用性。",
-      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties",
-      "defaultValue": true
-    },
-    {
-      "name": "opencode.username",
-      "type": "java.lang.String",
-      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties"
-    },
-    {
-      "name": "opencode.verify-ssl",
-      "type": "java.lang.Boolean",
-      "sourceType": "io.github.hiwepy.opencode.spring.boot.OpenCodeProperties"
+      "sourceType": "io.github.hiwepy.opencode.OpenCodeHttpClientConfig"
     }
   ],
   "hints": []

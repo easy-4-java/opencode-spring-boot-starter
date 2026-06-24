@@ -1,42 +1,43 @@
 package io.github.hiwepy.opencode.spring.boot;
 
-import io.github.hiwepy.opencode.OpenCodeClientConfig;
+import io.github.hiwepy.opencode.OpenCodeCliConfig;
+import io.github.hiwepy.opencode.OpenCodeHttpClientConfig;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * OpenCode Spring Boot 配置属性。
  */
-@EqualsAndHashCode(callSuper = true)
-@Data
 @ConfigurationProperties(prefix = OpenCodeProperties.PREFIX)
-public class OpenCodeProperties extends OpenCodeClientConfig {
+@Data
+public class OpenCodeProperties {
 
     public static final String PREFIX = "opencode";
 
-    /**
-     * 启用/禁用 OpenCode starter。
-     */
+    /** 是否启用本 Starter 提供的 Bean */
     private boolean enabled = true;
 
-    /**
-     * 启动时是否探测 CLI 可用性。
-     */
-    private boolean startupCheckEnabled = true;
+    /** HTTP/Server 相关配置 */
+    @NestedConfigurationProperty
+    private final OpenCodeHttpClientConfig http = new OpenCodeHttpClientConfig();
+
+    /** 本地 CLI 相关配置 */
+    @NestedConfigurationProperty
+    private final OpenCodeCli cli = new OpenCodeCli();
 
     /**
-     * CLI 不可用时是否快速失败（启动失败）。
+     * Starter 扩展的 CLI 配置，包含启动探测开关。
      */
-    private boolean failFastOnUnavailable = false;
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    public static class OpenCodeCli extends OpenCodeCliConfig {
 
-    /**
-     * 默认模型，格式 {@code provider/model}。
-     */
-    private String defaultModel;
+        /** 是否在应用启动时执行本机 {@code opencode --version} 探测 */
+        private boolean startupCheckEnabled = true;
 
-    /**
-     * 默认 agent 名称。
-     */
-    private String defaultAgent;
+        /** 启动探测失败时是否中断应用启动 */
+        private boolean failFastOnUnavailable = false;
+    }
 }
