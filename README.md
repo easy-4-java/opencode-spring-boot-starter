@@ -8,7 +8,7 @@ Spring Boot Starter for [OpenCode](https://opencode.ai) Java SDK。自动配置 
 
 ```xml
 <dependency>
-    <groupId>io.github.hiwepy</groupId>
+    <groupId>io.github.easy4j</groupId>
     <artifactId>opencode-spring-boot-starter</artifactId>
     <version>2.7.x.20260615-SNAPSHOT</version>
 </dependency>

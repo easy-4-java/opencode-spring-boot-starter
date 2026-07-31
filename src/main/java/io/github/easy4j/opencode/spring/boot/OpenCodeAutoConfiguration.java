@@ -1,8 +1,8 @@
-package io.github.hiwepy.opencode.spring.boot;
+package io.github.easy4j.opencode.spring.boot;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.hiwepy.opencode.OpenCodeClient;
-import io.github.hiwepy.opencode.cli.availability.OpenCodeCliAvailabilityChecker;
+import io.github.easy4j.opencode.OpenCodeClient;
+import io.github.easy4j.opencode.cli.availability.OpenCodeCliAvailabilityChecker;
 import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;

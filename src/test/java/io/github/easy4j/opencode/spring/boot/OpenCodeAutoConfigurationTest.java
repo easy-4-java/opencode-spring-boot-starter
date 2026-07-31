@@ -1,8 +1,8 @@
-package io.github.hiwepy.opencode.spring.boot;
+package io.github.easy4j.opencode.spring.boot;
 
-import io.github.hiwepy.opencode.OpenCodeClient;
-import io.github.hiwepy.opencode.OpenCodeHttpClientConfig;
-import io.github.hiwepy.opencode.cli.availability.OpenCodeCliAvailabilityChecker;
+import io.github.easy4j.opencode.OpenCodeClient;
+import io.github.easy4j.opencode.OpenCodeHttpClientConfig;
+import io.github.easy4j.opencode.cli.availability.OpenCodeCliAvailabilityChecker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,7 +1,7 @@
-package io.github.hiwepy.opencode.spring.boot;
+package io.github.easy4j.opencode.spring.boot;
 
-import io.github.hiwepy.opencode.cli.availability.OpenCodeCliAvailabilityChecker;
-import io.github.hiwepy.opencode.exception.OpenCodeCliStartupException;
+import io.github.easy4j.opencode.cli.availability.OpenCodeCliAvailabilityChecker;
+import io.github.easy4j.opencode.exception.OpenCodeCliStartupException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.mock.env.MockEnvironment;

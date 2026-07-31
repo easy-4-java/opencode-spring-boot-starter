@@ -1,9 +1,9 @@
-package io.github.hiwepy.opencode.spring.boot;
+package io.github.easy4j.opencode.spring.boot;
 
-import io.github.hiwepy.opencode.OpenCodeCliConfig;
-import io.github.hiwepy.opencode.cli.availability.OpenCodeCliAvailabilityChecker;
-import io.github.hiwepy.opencode.cli.availability.OpenCodeCliAvailabilityReport;
-import io.github.hiwepy.opencode.exception.OpenCodeCliStartupException;
+import io.github.easy4j.opencode.OpenCodeCliConfig;
+import io.github.easy4j.opencode.cli.availability.OpenCodeCliAvailabilityChecker;
+import io.github.easy4j.opencode.cli.availability.OpenCodeCliAvailabilityReport;
+import io.github.easy4j.opencode.exception.OpenCodeCliStartupException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -60,7 +60,7 @@ public class OpenCodeCliStartupChecker implements ApplicationRunner {
 
     private static boolean isOpenCodeStarterOnClasspath() {
         try {
-            Class.forName("io.github.hiwepy.opencode.spring.boot.OpenCodeAutoConfiguration");
+            Class.forName("io.github.easy4j.opencode.spring.boot.OpenCodeAutoConfiguration");
             return true;
         } catch (ClassNotFoundException ex) {
             return false;
