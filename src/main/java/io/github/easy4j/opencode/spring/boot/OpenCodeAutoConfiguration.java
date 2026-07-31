@@ -1,20 +1,24 @@
 package io.github.easy4j.opencode.spring.boot;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.easy4j.opencode.OpenCodeClient;
+import io.github.easy4j.opencode.OpenCodeHttpClientConfig;
+import io.github.easy4j.opencode.cli.OpenCodeCliExecutor;
 import io.github.easy4j.opencode.cli.availability.OpenCodeCliAvailabilityChecker;
 import okhttp3.OkHttpClient;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 
 /**
  * OpenCode 自动配置。
+ * <p>
+ * 注册 {@link OpenCodeClient} 门面 Bean，启动自检由 SDK 构造器统一管理。
+ * </p>
  */
 @Configuration
 @ConditionalOnClass(OpenCodeClient.class)
@@ -22,37 +26,49 @@ import org.springframework.core.env.Environment;
 @EnableConfigurationProperties(OpenCodeProperties.class)
 public class OpenCodeAutoConfiguration {
 
-    /**
-     * 注册 OpenCode 客户端门面 Bean。
-     */
     @Bean(destroyMethod = "close")
     @ConditionalOnMissingBean
     public OpenCodeClient openCodeClient(OpenCodeProperties properties,
-                                         ObjectProvider<ObjectMapper> objectMapperProvider,
-                                         ObjectProvider<OkHttpClient> httpClientProvider) {
-        return new OpenCodeClient(properties.getHttp(), properties.getCli(),
-                objectMapperProvider.getIfAvailable(), httpClientProvider.getIfAvailable());
+                                          ObjectMapper objectMapper,
+                                          OkHttpClient okHttpClient) {
+        return new OpenCodeClient(
+                properties.getHttp(),
+                properties.getCli(),
+                objectMapper,
+                okHttpClient);
     }
 
-    /**
-     * 注册 CLI 可用性探测器。
-     */
     @Bean
     @ConditionalOnMissingBean
     public OpenCodeCliAvailabilityChecker openCodeCliAvailabilityChecker() {
         return new OpenCodeCliAvailabilityChecker();
     }
 
-    /**
-     * 启动时可选执行 CLI 探测。
-     */
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = OpenCodeProperties.PREFIX + ".cli", name = "startup-check-enabled",
-            havingValue = "true", matchIfMissing = true)
-    public OpenCodeCliStartupChecker openCodeCliStartupChecker(OpenCodeProperties properties,
-                                                               OpenCodeCliAvailabilityChecker checker,
-                                                               Environment environment) {
-        return new OpenCodeCliStartupChecker(properties.getCli(), properties, checker, environment);
+    public OpenCodeCliExecutor openCodeCliExecutor(OpenCodeProperties properties) {
+        return new OpenCodeCliExecutor(properties.getCli());
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public OkHttpClient openCodeOkHttpClient(OpenCodeProperties properties) {
+        OpenCodeHttpClientConfig http = properties.getHttp();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .connectTimeout(http.getConnectTimeoutMillis(),
+                        java.util.concurrent.TimeUnit.MILLISECONDS)
+                .readTimeout(http.getReadTimeoutMillis(),
+                        java.util.concurrent.TimeUnit.MILLISECONDS);
+        if (!http.isVerifySsl()) {
+            builder.hostnameVerifier((hostname, session) -> true);
+        }
+        return builder.build();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ObjectMapper openCodeObjectMapper() {
+        return new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 }
