@@ -1,9 +1,12 @@
 package io.github.easy4j.opencode.spring.boot;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.easy4j.opencode.OpenCodeClient;
-import io.github.easy4j.opencode.OpenCodeClientConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.github.easy4j.opencode.OpenCodeHttpClientConfig;
+import io.github.easy4j.opencode.cli.OpenCodeCliExecutor;
+import io.github.easy4j.opencode.cli.availability.OpenCodeCliAvailabilityChecker;
+import okhttp3.OkHttpClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -13,6 +16,9 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * OpenCode 自动配置。
+ * <p>
+ * 注册 {@link OpenCodeClient} 门面 Bean，启动自检由 SDK 构造器统一管理。
+ * </p>
  */
 @Configuration
 @ConditionalOnClass(OpenCodeClient.class)
@@ -20,37 +26,49 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(OpenCodeProperties.class)
 public class OpenCodeAutoConfiguration {
 
-    private static final Logger log = LoggerFactory.getLogger(OpenCodeAutoConfiguration.class);
-
-    @Bean
-    @ConditionalOnMissingBean
-    public OpenCodeClientConfig openCodeClientConfig(OpenCodeProperties properties) {
-        OpenCodeClientConfig config = new OpenCodeClientConfig();
-        config.setServerUrl(properties.getServerUrl());
-        config.setUsername(properties.getUsername());
-        config.setPassword(properties.getPassword());
-        config.setConnectTimeoutMillis(properties.getConnectTimeoutMillis());
-        config.setReadTimeoutMillis(properties.getReadTimeoutMillis());
-        config.setVerifySsl(properties.isVerifySsl());
-        config.setLocalExecutable(properties.getCliExecutable());
-        config.setLocalTimeoutSeconds(properties.getCliTimeoutSeconds());
-        config.setLocalProbeTimeoutSeconds(5);
-        config.setDefaultModel(properties.getDefaultModel());
-        config.setDefaultAgent(properties.getDefaultAgent());
-        log.info("OpenCode client configured: serverUrl={}, username={}", config.getServerUrl(), config.getUsername());
-        return config;
-    }
-
     @Bean(destroyMethod = "close")
     @ConditionalOnMissingBean
-    public OpenCodeClient openCodeClient(OpenCodeClientConfig config) {
-        return new OpenCodeClient(config);
+    public OpenCodeClient openCodeClient(OpenCodeProperties properties,
+                                          ObjectMapper objectMapper,
+                                          OkHttpClient okHttpClient) {
+        return new OpenCodeClient(
+                properties.getHttp(),
+                properties.getCli(),
+                objectMapper,
+                okHttpClient);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = OpenCodeProperties.PREFIX, name = "startup-check-enabled", havingValue = "true", matchIfMissing = true)
-    public OpenCodeCliStartupChecker openCodeCliStartupChecker(OpenCodeClientConfig config, OpenCodeProperties properties) {
-        return new OpenCodeCliStartupChecker(config, properties.isFailFastOnUnavailable());
+    public OpenCodeCliAvailabilityChecker openCodeCliAvailabilityChecker() {
+        return new OpenCodeCliAvailabilityChecker();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public OpenCodeCliExecutor openCodeCliExecutor(OpenCodeProperties properties) {
+        return new OpenCodeCliExecutor(properties.getCli());
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public OkHttpClient openCodeOkHttpClient(OpenCodeProperties properties) {
+        OpenCodeHttpClientConfig http = properties.getHttp();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .connectTimeout(http.getConnectTimeoutMillis(),
+                        java.util.concurrent.TimeUnit.MILLISECONDS)
+                .readTimeout(http.getReadTimeoutMillis(),
+                        java.util.concurrent.TimeUnit.MILLISECONDS);
+        if (!http.isVerifySsl()) {
+            builder.hostnameVerifier((hostname, session) -> true);
+        }
+        return builder.build();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ObjectMapper openCodeObjectMapper() {
+        return new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 }
