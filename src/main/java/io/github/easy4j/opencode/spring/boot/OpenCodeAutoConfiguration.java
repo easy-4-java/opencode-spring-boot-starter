@@ -1,7 +1,7 @@
-package io.github.hiwepy.opencode.spring.boot;
+package io.github.easy4j.opencode.spring.boot;
 
-import io.github.hiwepy.opencode.OpenCodeClient;
-import io.github.hiwepy.opencode.OpenCodeClientConfig;
+import io.github.easy4j.opencode.OpenCodeClient;
+import io.github.easy4j.opencode.OpenCodeClientConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;

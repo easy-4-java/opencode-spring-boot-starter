@@ -1,4 +1,4 @@
-package io.github.hiwepy.opencode.spring.boot;
+package io.github.easy4j.opencode.spring.boot;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
