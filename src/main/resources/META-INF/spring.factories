@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  io.github.hiwepy.opencode.spring.boot.OpenCodeAutoConfiguration
+  io.github.easy4j.opencode.spring.boot.OpenCodeAutoConfiguration
