@@ -19,7 +19,7 @@
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <opencode-java-sdk.version>3.0.x.20260605-SNAPSHOT</opencode-java-sdk.version>
+        <opencode-java-sdk.version>3.0.x.20260630-SNAPSHOT</opencode-java-sdk.version>
     </properties>
 
     <dependencies>
