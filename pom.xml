@@ -436,6 +436,7 @@
 		<!-- SDK dependency -->
 		<dependency>
 			<groupId>io.github.easy4j</groupId>
+            <groupId>io.github.easy4j</groupId>
 			<artifactId>opencode-java-sdk</artifactId>
 			<version>${opencode-java-sdk.version}</version>
 		</dependency>
