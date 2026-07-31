@@ -1,5 +1,0 @@
-META-INF/spring-configuration-metadata.json
-io/github/hiwepy/opencode/spring/boot/OpenCodeProperties.class
-io/github/hiwepy/opencode/spring/boot/OpenCodeCliStartupChecker.class
-io/github/hiwepy/opencode/spring/boot/OpenCodeCliStartupChecker$OpenCodeCliUnavailableException.class
-io/github/hiwepy/opencode/spring/boot/OpenCodeAutoConfiguration.class
