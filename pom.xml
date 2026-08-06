@@ -17,12 +17,15 @@
     <description>Spring Boot starter for OpenCode Java SDK</description>
 
     <properties>
+
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <opencode-java-sdk.version>3.0.x.20260630-SNAPSHOT</opencode-java-sdk.version>
     </properties>
 
     <dependencies>
+
+        <!-- For Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -33,29 +36,35 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- For Spring Boot AutoConfiguration -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
+        <!-- For Spring Boot Configuration Processor -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
+        <!-- Source: https://github.com/easy-4-java/opencode-java-sdk — easy4j opencode-java-sdk -->
         <dependency>
             <groupId>io.github.easy4j</groupId>
             <artifactId>opencode-java-sdk</artifactId>
             <version>${opencode-java-sdk.version}</version>
         </dependency>
+        <!-- For Spring Boot Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- For Slf4j -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+        <!-- For Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -64,8 +73,11 @@
     </dependencies>
 
     <build>
+
         <plugins>
+            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
             <plugin>
+                <!-- 编译插件：编译主代码至主输出目录 -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -74,7 +86,9 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
+            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-source-plugin -->
             <plugin>
+                <!-- 源码插件:发布时自动将源码同时发布 -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>3.3.1</version>
@@ -91,6 +105,7 @@
     </build>
 
     <distributionManagement>
+
         <repository>
             <id>2624322-release-6F6h6R</id>
             <url>https://packages.aliyun.com/6927b116e6c3e0425dbdf60d/maven/2624322-release-6f6h6r</url>
