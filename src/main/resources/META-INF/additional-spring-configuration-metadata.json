@@ -1,5 +1,7 @@
 {
   "properties": [
+    { "name": "opencode.http.mode", "type": "io.github.easy4j.opencode.HttpResponseMode", "defaultValue": "BLOCKING" },
+    { "name": "opencode.http.base-url", "type": "java.lang.String", "defaultValue": "http://localhost:4096" },
     { "name": "opencode.http.write-timeout-millis", "type": "java.lang.Integer", "defaultValue": 120000 },
     { "name": "opencode.http.call-timeout-millis", "type": "java.lang.Integer", "defaultValue": 0 },
     { "name": "opencode.http.max-idle-connections", "type": "java.lang.Integer", "defaultValue": 32 },
@@ -10,7 +12,7 @@
     { "name": "opencode.http.stream-max-pool-size", "type": "java.lang.Integer", "defaultValue": 32 },
     { "name": "opencode.http.stream-queue-capacity", "type": "java.lang.Integer", "defaultValue": 128 },
     { "name": "opencode.http.stream-keep-alive-millis", "type": "java.lang.Long", "defaultValue": 60000 },
-    { "name": "opencode.http.sse-event-queue-capacity", "type": "java.lang.Integer", "defaultValue": 1024 },
+    { "name": "opencode.http.stream-event-queue-capacity", "type": "java.lang.Integer", "defaultValue": 1024 },
     { "name": "opencode.http.retry-on-connection-failure", "type": "java.lang.Boolean", "defaultValue": true }
   ]
 }
