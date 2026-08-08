@@ -6,6 +6,11 @@
     { "name": "opencode.http.keep-alive-duration-millis", "type": "java.lang.Long", "defaultValue": 300000 },
     { "name": "opencode.http.max-requests", "type": "java.lang.Integer", "defaultValue": 128 },
     { "name": "opencode.http.max-requests-per-host", "type": "java.lang.Integer", "defaultValue": 128 },
+    { "name": "opencode.http.stream-core-pool-size", "type": "java.lang.Integer", "defaultValue": 32 },
+    { "name": "opencode.http.stream-max-pool-size", "type": "java.lang.Integer", "defaultValue": 32 },
+    { "name": "opencode.http.stream-queue-capacity", "type": "java.lang.Integer", "defaultValue": 128 },
+    { "name": "opencode.http.stream-keep-alive-millis", "type": "java.lang.Long", "defaultValue": 60000 },
+    { "name": "opencode.http.sse-event-queue-capacity", "type": "java.lang.Integer", "defaultValue": 1024 },
     { "name": "opencode.http.retry-on-connection-failure", "type": "java.lang.Boolean", "defaultValue": true }
   ]
 }
