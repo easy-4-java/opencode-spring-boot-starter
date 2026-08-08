@@ -2,6 +2,7 @@ package io.github.easy4j.opencode.spring.boot;
 
 import io.github.easy4j.opencode.OpenCodeClient;
 import io.github.easy4j.opencode.OpenCodeHttpClientConfig;
+import io.github.easy4j.opencode.HttpResponseMode;
 import io.github.easy4j.opencode.cli.availability.OpenCodeCliAvailabilityChecker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest(classes = OpenCodeAutoConfiguration.class)
 @TestPropertySource(
         properties = {
-                "opencode.http.server-url=http://opencode.example:4096",
+                "opencode.http.base-url=http://opencode.example:4096",
+                "opencode.http.mode=blocking",
+                "opencode.http.stream-core-pool-size=7",
                 "opencode.http.password=test-password",
                 "opencode.http.default-agent=build",
                 "opencode.cli.startup-check-enabled=false"
@@ -43,7 +46,9 @@ class OpenCodeAutoConfigurationTest {
         assertNotNull(openCodeCliAvailabilityChecker);
 
         OpenCodeHttpClientConfig httpConfig = openCodeProperties.getHttp();
-        assertEquals("http://opencode.example:4096", httpConfig.getServerUrl());
+        assertEquals("http://opencode.example:4096", httpConfig.getBaseUrl());
+        assertEquals(HttpResponseMode.BLOCKING, httpConfig.getMode());
+        assertEquals(7, httpConfig.getStreamCorePoolSize());
         assertEquals("test-password", httpConfig.getPassword());
         assertEquals("build", httpConfig.getDefaultAgent());
     }
