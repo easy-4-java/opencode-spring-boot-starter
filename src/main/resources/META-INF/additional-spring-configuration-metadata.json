@@ -1,0 +1,11 @@
+{
+  "properties": [
+    { "name": "opencode.http.write-timeout-millis", "type": "java.lang.Integer", "defaultValue": 120000 },
+    { "name": "opencode.http.call-timeout-millis", "type": "java.lang.Integer", "defaultValue": 0 },
+    { "name": "opencode.http.max-idle-connections", "type": "java.lang.Integer", "defaultValue": 32 },
+    { "name": "opencode.http.keep-alive-duration-millis", "type": "java.lang.Long", "defaultValue": 300000 },
+    { "name": "opencode.http.max-requests", "type": "java.lang.Integer", "defaultValue": 128 },
+    { "name": "opencode.http.max-requests-per-host", "type": "java.lang.Integer", "defaultValue": 128 },
+    { "name": "opencode.http.retry-on-connection-failure", "type": "java.lang.Boolean", "defaultValue": true }
+  ]
+}
