@@ -21,6 +21,8 @@
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <opencode-java-sdk.version>2.0.x.20260630-SNAPSHOT</opencode-java-sdk.version>
+            <maven-jacoco-plugin.version>0.8.15</maven-jacoco-plugin.version>
+        <maven-central-publishing-plugin.version>0.11.0</maven-central-publishing-plugin.version>
     </properties>
 
     <dependencies>
@@ -75,6 +77,34 @@
     <build>
 
         <plugins>
+            <!-- 单元测试覆盖率插件: 强制要求 90% 覆盖率 -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${maven-jacoco-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals><goal>prepare-agent</goal></goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>verify</phase>
+                        <goals><goal>report</goal></goals>
+                    </execution>
+                    <execution>
+                        <id>check</id>
+                        <phase>verify</phase>
+                        <goals><goal>check</goal></goals>
+                        <configuration>
+                            <haltOnFailure>true</haltOnFailure>
+                            <rules><rule><element>BUNDLE</element><limits><limit>
+                                <counter>LINE</counter><value>COVEREDRATIO</value><minimum>0.90</minimum>
+                            </limit></limits></rule></rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
             <plugin>
                 <!-- 编译插件：编译主代码至主输出目录 -->
@@ -100,6 +130,16 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+                        <!-- 中央仓库发布插件 -->
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>${maven-central-publishing-plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                </configuration>
             </plugin>
         </plugins>
     </build>
