@@ -43,17 +43,18 @@ class OpenCodeAutoConfigurationTest {
     }
 
     @Test
-    @DisplayName("Auto-configuration loads when 'spring.boot.enabled=true'")
+    @DisplayName("Auto-configuration loads when 'opencode.enabled=true'")
     void testLoadsWhenEnabledPropertySet() {
         runner.withUserConfiguration(OpenCodeAutoConfiguration.class)
-                .withPropertyValues("spring.boot.enabled=true")
+                .withPropertyValues("opencode.enabled=true")
                 .run(context -> assertThat(context).hasSingleBean(OpenCodeAutoConfiguration.class));
     }
 
     @Test
-    @DisplayName("Auto-configuration is absent when property is not set")
-    void testNotLoadedWhenPropertyAbsent() {
+    @DisplayName("Auto-configuration is absent when 'opencode.enabled=false'")
+    void testNotLoadedWhenDisabled() {
         runner.withUserConfiguration(OpenCodeAutoConfiguration.class)
+                .withPropertyValues("opencode.enabled=false")
                 .run(context -> assertThat(context).doesNotHaveBean(OpenCodeAutoConfiguration.class));
     }
 }
