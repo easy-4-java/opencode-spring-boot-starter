@@ -23,7 +23,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
                 "opencode.http.stream-core-pool-size=7",
                 "opencode.http.password=test-password",
                 "opencode.http.default-agent=build",
-                "opencode.cli.startup-check-enabled=false"
+                "opencode.cli.startup-check-enabled=false",
+                "opencode.debug.enabled=true",
+                "opencode.debug.level=HEADERS",
+                "opencode.debug.max-content-length=4096"
         })
 class OpenCodeAutoConfigurationTest {
 
@@ -51,5 +54,10 @@ class OpenCodeAutoConfigurationTest {
         assertEquals(7, httpConfig.getStreamCorePoolSize());
         assertEquals("test-password", httpConfig.getPassword());
         assertEquals("build", httpConfig.getDefaultAgent());
+        assertEquals(true, openCodeProperties.getDebug().isEnabled());
+        assertEquals("HEADERS", openCodeProperties.getDebug().getLevel().name());
+        assertEquals(4096, openCodeProperties.getDebug().getMaxContentLength());
+        org.junit.jupiter.api.Assertions.assertSame(openCodeProperties.getDebug(), httpConfig.getDebug());
+        org.junit.jupiter.api.Assertions.assertSame(openCodeProperties.getDebug(), openCodeProperties.getCli().getDebug());
     }
 }
