@@ -46,8 +46,17 @@ class OpenCodeAutoConfigurationTest {
     @DisplayName("Auto-configuration loads when 'opencode.enabled=true'")
     void testLoadsWhenEnabledPropertySet() {
         runner.withUserConfiguration(OpenCodeAutoConfiguration.class)
-                .withPropertyValues("opencode.enabled=true")
-                .run(context -> assertThat(context).hasSingleBean(OpenCodeAutoConfiguration.class));
+                .withPropertyValues("opencode.enabled=true", "opencode.debug.enabled=true",
+                        "opencode.debug.level=HEADERS", "opencode.debug.max-content-length=4096")
+                .run(context -> {
+                    assertThat(context).hasSingleBean(OpenCodeAutoConfiguration.class);
+                    OpenCodeProperties properties = context.getBean(OpenCodeProperties.class);
+                    assertThat(properties.getDebug().isEnabled()).isTrue();
+                    assertThat(properties.getDebug().getLevel().name()).isEqualTo("HEADERS");
+                    assertThat(properties.getDebug().getMaxContentLength()).isEqualTo(4096);
+                    assertThat(properties.getHttp().getDebug()).isSameAs(properties.getDebug());
+                    assertThat(properties.getCli().getDebug()).isSameAs(properties.getDebug());
+                });
     }
 
     @Test

@@ -2,6 +2,7 @@ package io.github.easy4j.opencode.spring.boot;
 
 import io.github.easy4j.opencode.OpenCodeCliConfig;
 import io.github.easy4j.opencode.OpenCodeHttpClientConfig;
+import io.github.easy4j.opencode.OpenCodeDebugConfig;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -22,11 +23,15 @@ public class OpenCodeProperties {
     /** 是否启用本 Starter 提供的 Bean */
     private boolean enabled = true;
 
+    /** SDK 所有通道共享的分级调试配置。 */
+    @NestedConfigurationProperty
+    private final OpenCodeDebugConfig debug = new OpenCodeDebugConfig();
+
     /** HTTP/Server 相关配置 */
     @NestedConfigurationProperty
-    private final OpenCodeHttpClientConfig http = new OpenCodeHttpClientConfig();
+    private final OpenCodeHttpClientConfig http = new OpenCodeHttpClientConfig(debug);
 
     /** 本地 CLI 相关配置 */
     @NestedConfigurationProperty
-    private final OpenCodeCliConfig cli = new OpenCodeCliConfig();
+    private final OpenCodeCliConfig cli = new OpenCodeCliConfig(debug);
 }
