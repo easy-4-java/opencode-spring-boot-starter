@@ -11,7 +11,7 @@
 
     <groupId>io.github.easy4j</groupId>
     <artifactId>opencode-spring-boot-starter</artifactId>
-    <version>3.1.x.20260630</version>
+    <version>3.1.x.20260730-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Spring Boot starter for OpenCode Java SDK</description>
