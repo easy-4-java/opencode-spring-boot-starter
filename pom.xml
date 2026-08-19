@@ -55,7 +55,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.version>3.0</maven.version>
+        <maven.version>3.6.3</maven.version>
         <!-- Third-Party Dependencies -->
         <opencode-java-sdk.version>3.0.x.20260630</opencode-java-sdk.version>
         <!-- Maven Plugin Dependencies -->
