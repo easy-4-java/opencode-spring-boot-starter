@@ -26,6 +26,8 @@ import java.util.concurrent.TimeUnit;
  * <p>
  * 注册 {@link OpenCodeClient} 门面 Bean，启动自检由 SDK 构造器统一管理。
  * </p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
  */
 @Configuration
 @ConditionalOnClass(OpenCodeClient.class)
@@ -41,24 +43,43 @@ public class OpenCodeAutoConfiguration {
                                          @Qualifier("openCodeOkHttpClient") OkHttpClient okHttpClient) {
         return new OpenCodeClient(httpConfig, cliConfig, objectMapper, okHttpClient);
     }
+    /**
+     * <p>Open code http client config.</p>
+     * @param properties the properties
+     * @return the open code http client config
+     */
 
     @Bean
     @ConditionalOnMissingBean
     public OpenCodeHttpClientConfig openCodeHttpClientConfig(OpenCodeProperties properties) {
         return properties.getHttp();
     }
+    /**
+     * <p>Open code cli config.</p>
+     * @param properties the properties
+     * @return the open code cli config
+     */
 
     @Bean
     @ConditionalOnMissingBean
     public OpenCodeCliConfig openCodeCliConfig(OpenCodeProperties properties) {
         return properties.getCli();
     }
+    /**
+     * <p>Open code cli availability checker.</p>
+     * @return the open code cli availability checker
+     */
 
     @Bean
     @ConditionalOnMissingBean
     public OpenCodeCliAvailabilityChecker openCodeCliAvailabilityChecker() {
         return new OpenCodeCliAvailabilityChecker();
     }
+    /**
+     * <p>Open code cli executor.</p>
+     * @param cliConfig the cli config
+     * @return the open code cli executor
+     */
 
     @Bean
     @ConditionalOnMissingBean
@@ -90,6 +111,10 @@ public class OpenCodeAutoConfiguration {
         }
         return builder.build();
     }
+    /**
+     * <p>Open code object mapper.</p>
+     * @return the object mapper
+     */
 
     @Bean
     @ConditionalOnMissingBean

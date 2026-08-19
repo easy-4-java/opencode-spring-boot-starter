@@ -13,6 +13,8 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
  * HTTP/CLI 子系统的启动检查（{@code startupCheckEnabled}、{@code failFastOnUnavailable}）
  * 已下沉到 SDK 子配置中。
  * </p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
  */
 @ConfigurationProperties(prefix = OpenCodeProperties.PREFIX)
 @Data
