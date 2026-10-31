@@ -2,6 +2,7 @@ package io.github.easy4j.opencode.spring.boot;
 
 import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import io.github.easy4j.opencode.OpenCodeClient;
 import io.github.easy4j.opencode.OpenCodeCliConfig;
 import io.github.easy4j.opencode.OpenCodeHttpClientConfig;
@@ -94,7 +95,8 @@ public class OpenCodeAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public ObjectMapper openCodeObjectMapper() {
-        return new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return JsonMapper.builder()
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .build();
     }
 }
