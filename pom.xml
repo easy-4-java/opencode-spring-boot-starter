@@ -27,12 +27,6 @@
     </properties>
 
     <dependencies>
-
-        
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
 <!-- For Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
