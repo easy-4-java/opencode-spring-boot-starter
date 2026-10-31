@@ -1,7 +1,7 @@
 package io.github.easy4j.opencode.spring.boot;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
 import io.github.easy4j.opencode.OpenCodeClient;
 import io.github.easy4j.opencode.OpenCodeCliConfig;
 import io.github.easy4j.opencode.OpenCodeHttpClientConfig;
