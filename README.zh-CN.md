@@ -7,7 +7,7 @@
 **Spring Boot Starter，集成 opencode**
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.easy4j/opencode-spring-boot-starter)](https://github.com/easy-4-java/opencode-spring-boot-starter)
-[![Java](https://img.shields.io/badge/Java-17-orange)](#3-运行要求与兼容性)
+[![Java](https://img.shields.io/badge/Java-21-orange)](#3-运行要求与兼容性)
 [![License](https://img.shields.io/badge/license-Apache-2.0-green)](https://www.apache.org/licenses/LICENSE-2.0)
 
 [English](./README.md) | [简体中文](./README.zh-CN.md)
@@ -21,8 +21,8 @@
 
 ---
 
-> **当前版本**：`2.7.x.20260630-SNAPSHOT`<br>
-> **JDK 基线**：`17`<br>
+> **当前版本**：`4.1.x.20260730-SNAPSHOT`<br>
+> **JDK 基线**：`21`<br>
 > **Group ID**：`io.github.easy4j`<br>
 > **Artifact ID**：`opencode-spring-boot-starter`<br>
 > **许可证**：Apache License 2.0<br>
@@ -36,8 +36,8 @@
 | 类型 | Spring Boot Starter |
 | 消费方 | 使用 opencode 的 Spring Boot 应用 |
 | 核心能力 | 自动装配、属性绑定、开箱即用的 opencode Bean |
-| JDK | `17` |
-| 坐标 | `io.github.easy4j:opencode-spring-boot-starter:2.7.x.20260630-SNAPSHOT` |
+| JDK | `21` |
+| 坐标 | `io.github.easy4j:opencode-spring-boot-starter:4.1.x.20260730-SNAPSHOT` |
 | 配置前缀 | `opencode` |
 
 ## 2. 核心能力
@@ -52,9 +52,32 @@
 
 | 依赖 | 最低版本 | 证据来源 |
 |---|---:|---|
-| JDK | `17` | `pom.xml` |
-| Spring Boot | `2.7.18` | `pom.xml` parent |
-| Maven | `3.6+` | Maven Enforcer |
+| JDK | `21` | `pom.xml` |
+| Spring Boot | `4.1.2` | `pom.xml` parent |
+| Maven | `4.0.0-rc-5` | Maven Enforcer |
+
+
+### 4.1.x 的 Jackson 3 迁移边界
+
+本分支使用 Spring Boot 4.1.2、Java 21、Maven 4.0.0-rc-5，以及
+`io.github.easy4j:opencode-java-sdk:3.0.x.20260630-SNAPSHOT`。
+公开方法 `OpenCodeAutoConfiguration.openCodeObjectMapper()` 的返回类型和
+`openCodeClient(..., ObjectMapper, ...)` 的参数类型已从 Jackson 2 的
+`com.fasterxml.jackson.databind.ObjectMapper` 改为 Jackson 3 的
+`tools.jackson.databind.ObjectMapper`。这是源码和二进制 API 边界变化：
+直接调用方需要重新编译，自定义 mapper Bean、导入、模块及 builder 配置需要迁移。
+Jackson 2 Bean 不满足 Jackson 3 的注入/自动装配回退条件；存在多个 Jackson 3
+mapper 时，应通过 Spring 常规候选选择机制（例如 `@Primary`）明确选择。
+
+默认 mapper 通过 `JsonMapper.builder()` 创建并关闭 `FAIL_ON_UNKNOWN_PROPERTIES`。
+应用提供的 Jackson 3 mapper 将原样替代默认 Bean，其未知字段和命名策略由应用负责。
+SDK DTO 的 Jackson 注解仍位于 `com.fasterxml.jackson.annotation`，不要机械替换该包名。
+
+`OpenCodeJacksonContractTest` 使用真实工厂产物验证 JSON 处理、SDK Session
+协议字段命名/往返转换，以及自定义 mapper 回退和实例一致性，不调用远端 API 或 CLI。
+测试输出记录实际加载 SDK JAR 的内嵌 GAV、SHA-256、白名单构建元数据和构造器二进制描述符。
+可变 SNAPSHOT 坐标或当前 SDK 仓库 HEAD 均不能证明这些字节对应的源码提交。
+这些窄合同测试不代表与此前无法解析的非 SNAPSHOT 坐标行为完全等价，也不覆盖所有 DTO 或远端接口。
 
 ## 4. 自动装配
 
@@ -79,16 +102,17 @@ Starter 自动装配以下 Bean：
 <dependency>
     <groupId>io.github.easy4j</groupId>
     <artifactId>opencode-spring-boot-starter</artifactId>
-    <version>2.7.x.20260630-SNAPSHOT</version>
+    <version>4.1.x.20260730-SNAPSHOT</version>
 </dependency>
 ```
 
-本 Starter 依赖以下组件（版本由 ddd4j BOM 统一管理）：
+本分支在 POM 中显式指定 SDK 版本：
 
 ```xml
 <dependency>
     <groupId>io.github.easy4j</groupId>
     <artifactId>opencode-java-sdk</artifactId>
+    <version>3.0.x.20260630-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -148,7 +172,6 @@ private OpenCodeClient openCodeClient;
 
 ```bash
 mvn clean verify
-mvn -pl opencode-spring-boot-starter -am test
 ```
 
 ## 10. 排障

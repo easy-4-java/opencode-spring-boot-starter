@@ -58,7 +58,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.version>4.0.0-rc-5</maven.version>
         <!-- Third-Party Dependencies -->
-        <opencode-java-sdk.version>3.0.x.20260630</opencode-java-sdk.version>
+        <opencode-java-sdk.version>3.0.x.20260630-SNAPSHOT</opencode-java-sdk.version>
         <!-- Maven Plugin Dependencies -->
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <maven-central-publishing-plugin.version>0.11.0</maven-central-publishing-plugin.version>

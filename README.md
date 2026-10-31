@@ -7,7 +7,7 @@
 **Spring Boot Starter for opencode**
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.easy4j/opencode-spring-boot-starter)](https://github.com/easy-4-java/opencode-spring-boot-starter)
-[![Java](https://img.shields.io/badge/Java-17-orange)](#3-requirements-and-compatibility)
+[![Java](https://img.shields.io/badge/Java-21-orange)](#3-requirements-and-compatibility)
 [![License](https://img.shields.io/badge/license-Apache-2.0-green)](https://www.apache.org/licenses/LICENSE-2.0)
 
 [简体中文](./README.zh-CN.md) | [English](./README.md)
@@ -21,8 +21,8 @@
 
 ---
 
-> **Current Version**：`2.7.x.20260630-SNAPSHOT`<br>
-> **JDK Baseline**：`17`<br>
+> **Current Version**：`4.1.x.20260730-SNAPSHOT`<br>
+> **JDK Baseline**：`21`<br>
 > **Group ID**：`io.github.easy4j`<br>
 > **Artifact ID**：`opencode-spring-boot-starter`<br>
 > **License**：Apache License 2.0<br>
@@ -36,8 +36,8 @@
 | Type | Spring Boot Starter |
 | Consumers | Spring Boot applications using opencode |
 | Core Capabilities | auto-configuration, property binding, ready-to-use beans for opencode |
-| JDK | `17` |
-| Coordinates | `io.github.easy4j:opencode-spring-boot-starter:2.7.x.20260630-SNAPSHOT` |
+| JDK | `21` |
+| Coordinates | `io.github.easy4j:opencode-spring-boot-starter:4.1.x.20260730-SNAPSHOT` |
 | Config Prefix | `opencode` |
 
 ## 2. Core Capabilities
@@ -52,9 +52,39 @@
 
 | Dependency | Minimum | Evidence |
 |---|---:|---|
-| JDK | `17` | `pom.xml` |
-| Spring Boot | `2.7.18` | `pom.xml` parent |
-| Maven | `3.6+` | Maven Enforcer |
+| JDK | `21` | `pom.xml` |
+| Spring Boot | `4.1.2` | `pom.xml` parent |
+| Maven | `4.0.0-rc-5` | Maven Enforcer |
+
+
+### 4.1.x Jackson 3 migration boundary
+
+This branch uses Spring Boot 4.1.2, Java 21, Maven 4.0.0-rc-5 and
+`io.github.easy4j:opencode-java-sdk:3.0.x.20260630-SNAPSHOT`.
+The public `OpenCodeAutoConfiguration.openCodeObjectMapper()` return type and
+`openCodeClient(..., ObjectMapper, ...)` parameter now use
+`tools.jackson.databind.ObjectMapper` (Jackson 3), not
+`com.fasterxml.jackson.databind.ObjectMapper` (Jackson 2). This is a source and
+binary API boundary change: recompile direct callers and migrate custom mapper
+beans, imports, modules and builder configuration to Jackson 3. A Jackson 2 bean
+does not satisfy the Jackson 3 injection/backoff condition. If multiple Jackson 3
+mappers exist, select one using Spring's normal candidate selection (for example
+`@Primary`).
+
+The starter's default mapper is built with `JsonMapper.builder()` and disables
+`FAIL_ON_UNKNOWN_PROPERTIES`. An application-provided Jackson 3 mapper replaces
+that default unchanged, so its own unknown-field and naming policies apply.
+Jackson annotations used by SDK DTOs remain in `com.fasterxml.jackson.annotation`;
+do not mechanically replace that annotation package.
+
+`OpenCodeJacksonContractTest` exercises real factory-created JSON mapping,
+SDK Session wire names/round trips, and custom mapper backoff and identity.
+It makes no remote API calls or CLI invocations. Its test output records the
+loaded SDK JAR's embedded GAV, SHA-256, allowlisted build metadata and constructor
+binary descriptor. A mutable SNAPSHOT coordinate or current SDK repository HEAD
+does not identify the source commit of those bytes. These focused contracts do
+not establish full behavioral equivalence with the previously unresolvable
+non-SNAPSHOT coordinate, nor cover every SDK DTO or remote endpoint.
 
 ## 4. Auto-configuration
 
@@ -79,16 +109,17 @@ Auto-configuration registration:
 <dependency>
     <groupId>io.github.easy4j</groupId>
     <artifactId>opencode-spring-boot-starter</artifactId>
-    <version>2.7.x.20260630-SNAPSHOT</version>
+    <version>4.1.x.20260730-SNAPSHOT</version>
 </dependency>
 ```
 
-This starter depends on the following components (managed by ddd4j BOM):
+This branch declares the SDK version explicitly in its POM:
 
 ```xml
 <dependency>
     <groupId>io.github.easy4j</groupId>
     <artifactId>opencode-java-sdk</artifactId>
+    <version>3.0.x.20260630-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -148,7 +179,6 @@ private OpenCodeClient openCodeClient;
 
 ```bash
 mvn clean verify
-mvn -pl opencode-spring-boot-starter -am test
 ```
 
 ## 10. Troubleshooting
