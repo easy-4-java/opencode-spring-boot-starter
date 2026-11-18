@@ -12,5 +12,66 @@ permissions:
 
 jobs:
   build:
-    uses: easy-4-java/.github/.github/workflows/maven-starter-ci.yml@main
-    secrets: inherit
+    name: JDK build and verify
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Resolve version line
+        id: version-line
+        env:
+          VERSION_LINE: ${{ github.base_ref || github.ref_name }}
+        shell: bash
+        run: |
+          case "$VERSION_LINE" in
+            2.3.x|2.7.x) echo "java=8" >> "$GITHUB_OUTPUT" ;;
+            3.0.x|3.1.x|3.2.x|3.3.x|3.4.x|3.5.x) echo "java=17" >> "$GITHUB_OUTPUT" ;;
+            4.0.x|4.1.x) echo "java=21" >> "$GITHUB_OUTPUT" ;;
+            *) echo "Unsupported version line: $VERSION_LINE" >&2; exit 1 ;;
+          esac
+
+      - name: Checkout source
+        uses: actions/checkout@v7
+
+      - name: Set up JDK ${{ steps.version-line.outputs.java }}
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: ${{ steps.version-line.outputs.java }}
+          cache: maven
+
+      - name: Configure Easy4J Maven repositories
+        env:
+          MAVEN_SETTINGS_XML: ${{ secrets.MAVEN_SETTINGS_XML }}
+        shell: bash
+        run: |
+          install -d -m 700 "$HOME/.m2"
+          umask 077
+          printf '%s' "$MAVEN_SETTINGS_XML" > "$HOME/.m2/settings.xml"
+
+      - name: Build and verify
+        env:
+          VERSION_LINE: ${{ github.base_ref || github.ref_name }}
+        shell: bash
+        run: |
+          # PR validation has no signing key; Maven deploy still runs the POM's GPG execution.
+          if [[ "$VERSION_LINE" == "4.1.x" ]]; then
+            if [[ ! -x ./mvnw ]]; then
+              echo "The 4.1.x branch requires an executable Maven 4 wrapper (./mvnw)." >&2
+              exit 1
+            fi
+            ./mvnw -B --no-transfer-progress -Dgpg.skip=true clean verify
+          else
+            mvn -B --no-transfer-progress -Dgpg.skip=true clean verify
+          fi
+
+      - name: Upload surefire reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: surefire-reports
+          path: target/surefire-reports
+          if-no-files-found: ignore
+          retention-days: 14
